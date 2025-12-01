@@ -82,8 +82,15 @@ if(filteredCameras.length > 0) selectCamera(filteredCameras[0], 0);
 }
 
 function selectCamera(cam, idx) {
-videoPlayer.innerHTML = '<img src="' + cam.snap + '?t=' + Date.now() + '" style="width:100%;height:100%;object-fit:contain">';
+videoPlayer.innerHTML = '<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:48px;color:#22c55e"><div>📺</div><div style="font-size:20px;margin-top:20px;color:#8b5cf6">Click LIVE PAGE</div><div style="font-size:14px;margin-top:10px;color:#22c55e">to watch full stream</div></div>';
 infoPanel.innerHTML = '<div class="info-name">' + cam.name + '</div><div class="info-district">District: ' + cam.district + '</div><div class="info-district" style="margin-top:10px;color:#22c55e">📡 Live Snapshot</div>';
+  const btnLive = document.createElement('button');
+btnLive.innerHTML = '📺 LIVE PAGE';
+btnLive.style.cssText = 'position:absolute;bottom:20px;right:20px;padding:12px 24px;background:#22c55e;color:#000;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:14px;font-family:Courier New;transition:all .3s;z-index:10';
+btnLive.onmouseover = () => {btnLive.style.background='#8b5cf6';btnLive.style.color='#22c55e';};
+btnLive.onmouseout = () => {btnLive.style.background='#22c55e';btnLive.style.color='#000';};
+btnLive.onclick = () => window.open(cam.url, '_blank');
+videoPlayer.appendChild(btnLive);
 document.querySelectorAll('.camera-item').forEach(el => el.classList.remove('active'));
 if(document.querySelectorAll('.camera-item')[idx]) document.querySelectorAll('.camera-item')[idx].classList.add('active');
 }
