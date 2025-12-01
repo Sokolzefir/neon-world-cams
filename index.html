@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html id="html">
 <head>
 <meta charset="UTF-8">
-<title>Слежу за городом</title>
+<title id="title-tag">Слежу за городом</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,17 +12,14 @@ html,body {width:100%; height:100%; overflow:hidden}
 body {font-family:'Courier New',monospace; background:#0a0e27; color:#22c55e}
 .container {display:flex; height:100vh; flex-direction:column}
 @media(min-width:1024px) {.container {flex-direction:row}}
-.header {background:linear-gradient(90deg,#8b5cf6,#1a1f3a); color:#fff; padding:12px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #8b5cf6}
+.header {background:linear-gradient(90deg,#8b5cf6,#1a1f3a); color:#fff; padding:12px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #8b5cf6; gap:10px; flex-wrap:wrap}
 .header h1 {font-size:16px; flex:1; text-align:center}
 .lang-btn {background:#22c55e; color:#000; border:none; padding:6px 12px; margin:0 2px; cursor:pointer; border-radius:4px; font-weight:bold; font-size:11px}
 .lang-btn.active {background:#8b5cf6; color:#22c55e}
 .menu-toggle {display:none; width:44px; height:44px; background:#22c55e; border:none; color:#000; font-weight:bold; cursor:pointer; border-radius:4px}
 @media(max-width:1023px) {.menu-toggle {display:block}}
 .sidebar {width:280px; background:#0f1629; border-right:2px solid #8b5cf6; display:flex; flex-direction:column; overflow:hidden}
-@media(max-width:1023px) {
-.sidebar {position:absolute; top:56px; left:0; right:0; width:100%; max-height:calc(100vh - 56px); border-bottom:2px solid #8b5cf6; border-right:none; z-index:1000; display:none}
-.sidebar.open {display:flex}
-}
+@media(max-width:1023px) {.sidebar {position:absolute; top:56px; left:0; right:0; width:100%; max-height:calc(100vh - 56px); border-bottom:2px solid #8b5cf6; border-right:none; z-index:1000; display:none} .sidebar.open {display:flex}}
 .district-filter {padding:10px; border-bottom:2px solid #8b5cf6}
 .district-filter select {width:100%; padding:8px; background:#0a0e27; color:#22c55e; border:2px solid #8b5cf6; border-radius:4px; cursor:pointer; font-family:monospace; font-weight:bold; font-size:12px}
 .camera-list {flex:1; overflow-y:auto; padding:8px}
@@ -43,10 +40,10 @@ body {font-family:'Courier New',monospace; background:#0a0e27; color:#22c55e}
 <body>
 <div class="container">
 <div class="header">
-<h1>Слежу за городом</h1>
+<h1 id="h-title">Слежу за городом</h1>
 <div style="display:flex; gap:4px;">
-<button class="lang-btn active" onclick="setLang('ru')">РУ</button>
-<button class="lang-btn" onclick="setLang('en')">EN</button>
+<button class="lang-btn active" onclick="setLang('ru')" id="btn-ru">РУ</button>
+<button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
 </div>
 </div>
 <button class="menu-toggle" onclick="toggleMenu()">☰</button>
@@ -56,12 +53,13 @@ body {font-family:'Courier New',monospace; background:#0a0e27; color:#22c55e}
 <option value="">Все районы</option>
 <option value="ЦАО">ЦАО</option>
 <option value="САО">САО</option>
+<option value="СВАО">СВАО</option>
 <option value="ВАО">ВАО</option>
+<option value="ЮВАО">ЮВАО</option>
+<option value="ЮАО">ЮАО</option>
+<option value="ЮЗАО">ЮЗАО</option>
 <option value="ЗАО">ЗАО</option>
-<option value="НАО">НАО</option>
-<option value="ВЫВАО">ВЫВАО</option>
-<option value="НЕАО">НЕАО</option>
-<option value="СЕАО">СЕАО</option>
+<option value="СЗАО">СЗАО</option>
 </select>
 </div>
 <div class="camera-list" id="cams"></div>
@@ -77,58 +75,115 @@ let lang = 'ru';
 let currUrl = '';
 const ytIds = ['lKEX4fuQypI', 'eeMEZYE9qE0', '9SW43w9wpfo', 'RsqHdJhj1FI', 'D8D0Mqqm0kE', 'JJ8Sl_xV7p4', 'wkH6mzDVLlc'];
 const cams = [
-{n: 'Москва-Река', d: 'ЦАО', url: ytIds[0]},
-{n: 'Центр-1', d: 'ЦАО', url: ytIds[1]},
-{n: 'Центр-2', d: 'ЦАО', url: ytIds[2]},
-{n: 'Поварка-1', d: 'САО', url: ytIds[3]},
-{n: 'Поварка-2', d: 'САО', url: ytIds[4]},
-{n: 'Велотомные-1', d: 'ВАО', url: ytIds[5]},
-{n: 'Велотомные-2', d: 'ВАО', url: ytIds[6]},
-{n: 'Коломенская-1', d: 'ВАО', url: ytIds[0]},
-{n: 'Коломенская-2', d: 'ВАО', url: ytIds[1]},
-{n: 'Тверой-1', d: 'ЗАО', url: ytIds[2]},
-{n: 'Охотный-1', d: 'НАО', url: ytIds[3]},
-{n: 'Охотный-2', d: 'НАО', url: ytIds[4]},
-{n: 'Охотный-3', d: 'НАО', url: ytIds[5]},
-{n: 'Сокольники-1', d: 'ВЫВАО', url: ytIds[6]},
-{n: 'Сокольники-2', d: 'ВЫВАО', url: ytIds[0]},
-{n: 'Маря-Посад-1', d: 'НЕАО', url: ytIds[1]},
-{n: 'Маря-Посад-2', d: 'НЕАО', url: ytIds[2]},
-{n: 'Новогиреевские-1', d: 'СЕАО', url: ytIds[3]},
-{n: 'Новогиреевские-2', d: 'СЕАО', url: ytIds[4]},
-{n: 'ЦАО-центр-3', d: 'ЦАО', url: ytIds[5]},
-{n: 'НАО-ост', d: 'НАО', url: ytIds[6]},
-{n: 'САО-севеп', d: 'САО', url: ytIds[0]},
-{n: 'ЗАО-зап', d: 'ЗАО', url: ytIds[1]},
-{n: 'СЕАО-юг', d: 'СЕАО', url: ytIds[2]},
-];
+{n: 'Москва-Река', d: 'ЦАО', url: ytIds[0], ne: 'Moscow River'},
+{n: 'Максимов', d: 'ЦАО', url: ytIds[1], ne: 'Maksimov'},
+{n: 'Арбат', d: 'ЦАО', url: ytIds[2], ne: 'Arbat'},
+{n: 'Поварская', d: 'САО', url: ytIds[3], ne: 'Povarskaya'},
+{n: 'Абалюн', d: 'САО', url: ytIds[4], ne: 'Abalon'},
+{n: 'Экспо', d: 'СВАО', url: ytIds[5], ne: 'Expo'},
+{n: 'Комсомолец', d: 'СВАО', url: ytIds[6], ne: 'Komsomoltsa'},
+{n: 'Маяковский', d: 'ВАО', url: ytIds[0], ne: 'Mayakovski'},
+{n: 'Ленинград', d: 'ВАО', url: ytIds[1], ne: 'Leningrad'},
+{n: 'Косына', d: 'ВАО', url: ytIds[2], ne: 'Kosyna'},
+{n: 'Красные ворота', d: 'ЮВАО', url: ytIds[3], ne: 'Red Gates'},
+{n: 'Грибоедов', d: 'ЮВАО', url: ytIds[4], ne: 'Griboedov'},
+{n: 'Колчугино', d: 'ЮАО', url: ytIds[5], ne: 'Kolchugino'},
+{n: 'Донской', d: 'ЮАО', url: ytIds[6], ne: 'Donskoy'},
+{n: 'Ленинский', d: 'ЮАО', url: ytIds[0], ne: 'Leninskiy'},
+{n: 'Ломоносов', d: 'ЮЗАО', url: ytIds[1], ne: 'Lomonosov'},
+{n: 'Коньково', d: 'ЮЗАО', url: ytIds[2], ne: 'Konkovo'},
+{n: 'Котловка', d: 'ЮЗАО', url: ytIds[3], ne: 'Kotlovka'},
+{n: 'Раменки', d: 'ЗАО', url: ytIds[4], ne: 'Ramenki'},
+{n: 'Крылатское', d: 'ЗАО', url: ytIds[5], ne: 'Krylatskoe'},
+{n: 'Кунцево', d: 'ЗАО', url: ytIds[6], ne: 'Kuntsevo'},
+{n: 'Сканин', d: 'СЗАО', url: ytIds[0], ne: 'Skanin'},
+{n: 'Сокольники', d: 'СЗАО', url: ytIds[1], ne: 'Sokolniki'},
+{n: 'Пресня', d: 'СЗАО', url: ytIds[2], ne: 'Presnya'},
+]
+
+const trans = {
+  'ru': {
+    'all': 'Все районы',
+    'district': 'Округ:',
+    'source': 'Источник:'
+  },
+  'en': {
+    'all': 'All Districts',
+    'district': 'District:',
+    'source': 'Source:'
+  }
+}
 
 function render() {
   const dist = document.getElementById('dist').value;
   const list = document.getElementById('cams');
   list.innerHTML = '';
-  cams.filter(c => !dist || c.d === dist).forEach(c => {
+  const filtered = cams.filter(c => !dist || c.d === dist);
+  
+  filtered.forEach(c => {
     const el = document.createElement('div');
     el.className = 'camera-item';
-    if (!currUrl) currUrl = c.url;
-    el.textContent = c.n;
-    el.onclick = () => {selectCam(c); document.querySelectorAll('.camera-item').forEach(x => x.classList.remove('active')); el.classList.add('active')};
+    if (!currUrl) {currUrl = c.url; currCam = c;}
+    const txt = lang === 'ru' ? c.n : c.ne;
+    el.textContent = txt;
+    el.onclick = () => {selectCam(c); closeMobile(); updateActive();};
     list.appendChild(el);
-    if (c.url === currUrl && !el.classList.contains('active')) el.classList.add('active');
   });
+  
+  if (filtered.length > 0) selectCam(filtered[0]);
 }
 
+let currCam = null;
 function selectCam(c) {
   currUrl = c.url;
-  const html = '<iframe src="https://www.youtube.com/embed/' + currUrl + '?autoplay=1&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>';
+  currCam = c;
+  const html = '<iframe src="https://www.youtube.com/embed/' + currUrl + '?autoplay=1" allow="autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" playsinline="1"></iframe>';
   document.getElementById('video').innerHTML = html;
-  document.getElementById('info').innerHTML = '<div class="info-row"><span class="info-label">🎬</span> ' + c.n + '</div><div class="info-row"><span class="info-label">📋</span> ' + (lang === 'ru' ? 'Округ: ' : 'District: ') + c.d + '</div><div class="info-row"><span class="info-label">🔊</span> YouTube Live</div>';
+  updateInfo();
+}
+
+function updateInfo() {
+  if (!currCam) return;
+  const cname = lang === 'ru' ? currCam.n : currCam.ne;
+  const dlbl = trans[lang].district;
+  const slbl = trans[lang].source;
+  document.getElementById('info').innerHTML = '<div class="info-row"><span class="info-label">🎬</span> ' + cname + '</div><div class="info-row"><span class="info-label">📋</span> ' + dlbl + ' ' + currCam.d + '</div><div class="info-row"><span class="info-label">🔊</span> ' + slbl + ' YouTube Live</div>';
+}
+
+function updateActive() {
+  const items = document.querySelectorAll('.camera-item');
+  items.forEach(el => el.classList.remove('active'));
+  const txt = lang === 'ru' ? currCam.n : currCam.ne;
+  for (let el of items) {
+    if (el.textContent === txt) {
+      el.classList.add('active');
+      break;
+    }
+  }
 }
 
 function filterCams() { render(); }
 function live() { window.open('https://www.youtube.com/watch?v=' + currUrl, '_blank'); }
 function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-function setLang(l) { lang = l; document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
+function closeMobile() { if (window.innerWidth < 1024) document.getElementById('sidebar').classList.remove('open'); }
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  if (l === 'ru') {
+    document.getElementById('btn-ru').classList.add('active');
+    document.getElementById('html').setAttribute('lang', 'ru');
+  } else {
+    document.getElementById('btn-en').classList.add('active');
+    document.getElementById('html').setAttribute('lang', 'en');
+  }
+  
+  const allOpt = document.querySelector('option[value=""]');
+  if (allOpt) allOpt.textContent = trans[lang].all;
+  
+  updateInfo();
+  render();
+}
 
 render();
 </script>
