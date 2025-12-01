@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NEON MOSCOW CAMS</title>
+<title>NEON MOSCOW CAMS - Live</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overflow:hidden}
@@ -16,11 +16,13 @@ body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overfl
 .camera-list{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:#8b5cf6 #0a0e27}
 .camera-item{padding:12px;margin:8px 0;background:rgba(34,197,94,.1);border:2px solid #8b5cf6;border-radius:5px;cursor:pointer;transition:all .3s;font-size:11px;word-wrap:break-word}
 .camera-item:hover{background:rgba(139,92,246,.3);border-color:#22c55e}
-.camera-item.active{background:rgba(139,92,246,.3);border-color:#22c55e}
+.camera-item.active{background:rgba(139,92,246,.3);border-color:#22c55e;border-left:4px solid #22c55e}
 .video-container{flex:1;display:flex;flex-direction:column;position:relative}
 .video-player{flex:1;background:#000;border:2px solid #22c55e;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
 .video-player iframe{width:100%;height:100%;border:none}
 .loading{text-align:center;color:#22c55e;padding:20px;font-size:16px}
+.btn-live{position:absolute;bottom:20px;right:20px;padding:12px 24px;background:#22c55e;color:#000;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:14px;font-family:'Courier New',monospace;z-index:100;transition:all .3s}
+.btn-live:hover{background:#8b5cf6;color:#22c55e;transform:scale(1.05)}
 .info-panel{background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);padding:15px;border-top:2px solid #22c55e;min-height:80px;overflow-y:auto;font-size:11px}
 .info-name{color:#22c55e;font-weight:bold;font-size:13px;margin-bottom:5px}
 .info-district{color:#8b5cf6;font-size:10px;margin:5px 0}
@@ -44,29 +46,32 @@ body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overfl
 </div>
 <div class="main">
 <div class="video-container">
-<div class="video-player" id="videoPlayer"><div class="loading">SELECT CAMERA</div></div>
+<div class="video-player" id="videoPlayer"><div class="loading">📺 SELECT CAMERA</div></div>
+<button class="btn-live" id="btnLive" onclick="openLive()" style="display:none">🔴 WATCH LIVE</button>
 </div>
 <div class="info-panel" id="infoPanel"></div>
 </div>
 </div>
 <script>
 const cameras = [
-{name:'Red Square Moscow Live',district:'Central',youtubeId:'ocPzP8XfWOk'},
-{name:'Moscow Moskva River (Maxima)',district:'Central',youtubeId:'6xs1dNWHpgk'},
-{name:'Moscow Center Live Cam',district:'Central',youtubeId:'eeMEZYE9qE0'},
-{name:'Moscow Center (Taganskaya)',district:'East',youtubeId:'9SW43w9wpfo'},
-{name:'Moscow Live Stream 1',district:'Central',youtubeId:'ocPzP8XfWOk'},
-{name:'Moscow Live Stream 2',district:'East',youtubeId:'6xs1dNWHpgk'},
-{name:'Moscow Live Stream 3',district:'West',youtubeId:'eeMEZYE9qE0'},
-{name:'Moscow Live Stream 4',district:'North',youtubeId:'9SW43w9wpfo'},
-{name:'Moscow City Center View',district:'Central',youtubeId:'ocPzP8XfWOk'},
-{name:'Moscow Live Broadcast',district:'South',youtubeId:'6xs1dNWHpgk'}
+{name:'Moscow Live Stream 1',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
+{name:'Moscow Live Stream 2',district:'Central',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
+{name:'Moscow Live Stream 3',district:'East',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
+{name:'Moscow Live Stream 4',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
+{name:'Moscow Live Broadcast 1',district:'West',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
+{name:'Moscow Live Broadcast 2',district:'North',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
+{name:'Moscow City Live',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
+{name:'Moscow Center Live',district:'East',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
+{name:'Moscow Stream Live 1',district:'South',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
+{name:'Moscow Stream Live 2',district:'West',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'}
 ];
 
 let filteredCameras = cameras;
 const videoPlayer = document.getElementById('videoPlayer');
 const infoPanel = document.getElementById('infoPanel');
 const cameraList = document.getElementById('cameraList');
+const btnLive = document.getElementById('btnLive');
+let currentUrl = '';
 
 function renderCameras() {
 cameraList.innerHTML = '';
@@ -81,11 +86,18 @@ if(filteredCameras.length > 0) selectCamera(filteredCameras[0], 0);
 }
 
 function selectCamera(cam, idx) {
-const iframeHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + cam.youtubeId + '?autoplay=1&mute=1" allow="autoplay" allowfullscreen></iframe>';
+const videoId = cam.url.split('v=')[1];
+const iframeHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
 videoPlayer.innerHTML = iframeHTML;
-infoPanel.innerHTML = '<div class="info-name">' + cam.name + '</div><div class="info-district">District: ' + cam.district + '</div><div class="info-district" style="margin-top:10px;color:#22c55e">📡 YouTube Live Stream</div>';
+currentUrl = cam.url;
+btnLive.style.display = 'block';
+infoPanel.innerHTML = '<div class="info-name">🎬 ' + cam.name + '</div><div class="info-district">District: ' + cam.district + '</div><div class="info-district" style="margin-top:10px;color:#22c55e">📡 YouTube Live</div>';
 document.querySelectorAll('.camera-item').forEach(el => el.classList.remove('active'));
 if(document.querySelectorAll('.camera-item')[idx]) document.querySelectorAll('.camera-item')[idx].classList.add('active');
+}
+
+function openLive() {
+if(currentUrl) window.open(currentUrl, '_blank');
 }
 
 function filterCameras() {
