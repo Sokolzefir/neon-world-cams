@@ -2,130 +2,135 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<title>Слежу за городом</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>NEON MOSCOW CAMS</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overflow:hidden;padding-top:max(0px,env(safe-area-inset-top));padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
-.container{display:flex;flex-direction:column;height:100vh;width:100%}
-@media(min-width:1024px){
-.container{flex-direction:row}
+* {margin:0; padding:0; box-sizing:border-box}
+html,body {width:100%; height:100%; overflow:hidden}
+body {font-family:'Courier New',monospace; background:#0a0e27; color:#22c55e}
+.container {display:flex; height:100vh; flex-direction:column}
+@media(min-width:1024px) {.container {flex-direction:row}}
+.header {background:linear-gradient(90deg,#8b5cf6,#1a1f3a); color:#fff; padding:12px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #8b5cf6}
+.header h1 {font-size:16px; flex:1; text-align:center}
+.lang-btn {background:#22c55e; color:#000; border:none; padding:6px 12px; margin:0 2px; cursor:pointer; border-radius:4px; font-weight:bold; font-size:11px}
+.lang-btn.active {background:#8b5cf6; color:#22c55e}
+.menu-toggle {display:none; width:44px; height:44px; background:#22c55e; border:none; color:#000; font-weight:bold; cursor:pointer; border-radius:4px}
+@media(max-width:1023px) {.menu-toggle {display:block}}
+.sidebar {width:280px; background:#0f1629; border-right:2px solid #8b5cf6; display:flex; flex-direction:column; overflow:hidden}
+@media(max-width:1023px) {
+.sidebar {position:absolute; top:56px; left:0; right:0; width:100%; max-height:calc(100vh - 56px); border-bottom:2px solid #8b5cf6; border-right:none; z-index:1000; display:none}
+.sidebar.open {display:flex}
 }
-.sidebar{width:100%;max-height:30%;background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);border-bottom:2px solid #8b5cf6;display:flex;flex-direction:column;box-shadow:inset 0 0 30px rgba(139,92,246,.2)}
-@media(min-width:1024px){
-.sidebar{width:340px;max-height:100%;border-right:2px solid #8b5cf6;border-bottom:none}
-}
-.main{flex:1;display:flex;flex-direction:column;min-height:0}
-.header{background:linear-gradient(90deg,#8b5cf6 0%,#22c55e 100%);color:#000;padding:15px;text-align:center;font-weight:bold;border-bottom:2px solid #22c55e;font-size:18px}
-@media(max-width:768px){
-.header{padding:12px;font-size:16px}
-}
-.filter-box{padding:12px;border-bottom:2px solid #8b5cf6}
-.filter-box select{width:100%;padding:10px;background:#0a0e27;border:2px solid #22c55e;color:#22c55e;border-radius:5px;font-family:'Courier New',monospace;cursor:pointer;font-size:14px;-webkit-appearance:none;-moz-appearance:none;appearance:none}
-.camera-list{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:#8b5cf6 #0a0e27}
-.camera-item{padding:12px;margin:6px 0;background:rgba(34,197,94,.1);border:2px solid #8b5cf6;border-radius:5px;cursor:pointer;transition:all .2s;font-size:12px;word-wrap:break-word;active:#22c55e}
-.camera-item:active{background:rgba(139,92,246,.5)}
-.camera-item.active{background:rgba(139,92,246,.3);border-color:#22c55e;border-left:4px solid #22c55e}
-.video-container{flex:1;display:flex;flex-direction:column;position:relative;min-height:0}
-.video-player{flex:1;background:#000;border:2px solid #22c55e;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
-.video-player iframe{width:100%;height:100%;border:none}
-.loading{text-align:center;color:#22c55e;padding:20px;font-size:14px}
-.btn-live{position:absolute;bottom:15px;right:15px;padding:12px 20px;background:#22c55e;color:#000;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:13px;font-family:'Courier New',monospace;z-index:100;transition:all .2s;-webkit-appearance:none;appearance:none}
-.btn-live:active{background:#8b5cf6;color:#22c55e;transform:scale(0.95)}
-.info-panel{background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);padding:12px;border-top:2px solid #22c55e;min-height:70px;overflow-y:auto;font-size:11px}
-.info-name{color:#22c55e;font-weight:bold;font-size:12px;margin-bottom:5px}
-.info-district{color:#8b5cf6;font-size:10px;margin:5px 0}
-@media(max-width:768px){
-.info-panel{min-height:60px}
-.info-name{font-size:11px}
-}
+.district-filter {padding:10px; border-bottom:2px solid #8b5cf6}
+.district-filter select {width:100%; padding:8px; background:#0a0e27; color:#22c55e; border:2px solid #8b5cf6; border-radius:4px; cursor:pointer; font-family:monospace; font-weight:bold; font-size:12px}
+.camera-list {flex:1; overflow-y:auto; padding:8px}
+.camera-item {padding:10px; margin:4px 0; background:rgba(34,197,86,0.1); border:2px solid #8b5cf6; border-radius:4px; cursor:pointer; color:#22c55e; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.camera-item:hover {background:rgba(34,197,86,0.2); border-color:#22c55e}
+.camera-item.active {background:rgba(139,92,246,0.3); border-color:#22c55e; box-shadow:0 0 8px rgba(34,197,86,0.5)}
+.main {flex:1; display:flex; flex-direction:column; position:relative; min-height:0}
+@media(max-width:1023px) {.main {background:linear-gradient(135deg,#1a1f3a,#0f1629)}}
+.video-wrap {flex:1; background:#000; border:2px solid #8b5cf6; border-radius:4px; overflow:hidden; position:relative}
+.video-wrap iframe {width:100%; height:100%; border:none}
+.info {background:linear-gradient(135deg,#1a1f3a,#0f1629); padding:10px; border-top:2px solid #8b5cf6; font-size:12px; min-height:60px}
+.info-row {margin:3px 0; color:#22c55e}
+.info-label {color:#8b5cf6}
+.btn-live {position:absolute; bottom:12px; right:12px; background:#22c55e; color:#000; border:none; padding:10px 16px; cursor:pointer; border-radius:4px; font-weight:bold; z-index:100; font-size:12px}
+.btn-live:hover {background:#8b5cf6; color:#22c55e}
 </style>
 </head>
 <body>
 <div class="container">
-<div class="sidebar">
-<div class="header">🎬 NEON MOSCOW</div>
-<div class="filter-box">
-<select id="districtFilter" onchange="filterCameras()">
-<option value="">All Districts</option>
-<option value="Central">Central</option>
-<option value="North">North</option>
-<option value="East">East</option>
-<option value="West">West</option>
+<div class="header">
+<h1>Слежу за городом</h1>
+<div style="display:flex; gap:4px;">
+<button class="lang-btn active" onclick="setLang('ru')">РУ</button>
+<button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+</div>
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<div class="sidebar" id="sidebar">
+<div class="district-filter">
+<select id="dist" onchange="filterCams()">
+<option value="">Все районы</option>
+<option value="ЦАО">ЦАО</option>
+<option value="САО">САО</option>
+<option value="ВАО">ВАО</option>
+<option value="ЗАО">ЗАО</option>
+<option value="НАО">НАО</option>
+<option value="ВЫВАО">ВЫВАО</option>
+<option value="НЕАО">НЕАО</option>
+<option value="СЕАО">СЕАО</option>
 </select>
 </div>
-<div class="camera-list" id="cameraList"></div>
+<div class="camera-list" id="cams"></div>
 </div>
 <div class="main">
-<div class="video-container">
-<div class="video-player" id="videoPlayer"><div class="loading">📺 SELECT CAMERA</div></div>
-<button class="btn-live" id="btnLive" onclick="openLive()" style="display:none">📱 OPEN FULL</button>
-</div>
-<div class="info-panel" id="infoPanel"></div>
+<div class="video-wrap" id="video"></div>
+<div class="info" id="info"><div class="info-row">Москва Live</div></div>
+<button class="btn-live" onclick="live()">🔴 LIVE</button>
 </div>
 </div>
 <script>
-const cameras = [
-{name:'Moscow Moskva River Live',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Live Stream 1',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Live Stream 2',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Live Center View',district:'East',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
-{name:'Moscow Night City',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Streets Live',district:'North',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
-{name:'Moscow Urban View',district:'West',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Traffic Live',district:'East',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
-{name:'Moscow Downtown',district:'Central',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
-{name:'Moscow Live Today',district:'West',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'}
+let lang = 'ru';
+let currUrl = '';
+const ytIds = ['lKEX4fuQypI', 'eeMEZYE9qE0', '9SW43w9wpfo', 'RsqHdJhj1FI', 'D8D0Mqqm0kE', 'JJ8Sl_xV7p4', 'wkH6mzDVLlc'];
+const cams = [
+{n: 'Москва-Река', d: 'ЦАО', url: ytIds[0]},
+{n: 'Центр-1', d: 'ЦАО', url: ytIds[1]},
+{n: 'Центр-2', d: 'ЦАО', url: ytIds[2]},
+{n: 'Поварка-1', d: 'САО', url: ytIds[3]},
+{n: 'Поварка-2', d: 'САО', url: ytIds[4]},
+{n: 'Велотомные-1', d: 'ВАО', url: ytIds[5]},
+{n: 'Велотомные-2', d: 'ВАО', url: ytIds[6]},
+{n: 'Коломенская-1', d: 'ВАО', url: ytIds[0]},
+{n: 'Коломенская-2', d: 'ВАО', url: ytIds[1]},
+{n: 'Тверой-1', d: 'ЗАО', url: ytIds[2]},
+{n: 'Охотный-1', d: 'НАО', url: ytIds[3]},
+{n: 'Охотный-2', d: 'НАО', url: ytIds[4]},
+{n: 'Охотный-3', d: 'НАО', url: ytIds[5]},
+{n: 'Сокольники-1', d: 'ВЫВАО', url: ytIds[6]},
+{n: 'Сокольники-2', d: 'ВЫВАО', url: ytIds[0]},
+{n: 'Маря-Посад-1', d: 'НЕАО', url: ytIds[1]},
+{n: 'Маря-Посад-2', d: 'НЕАО', url: ytIds[2]},
+{n: 'Новогиреевские-1', d: 'СЕАО', url: ytIds[3]},
+{n: 'Новогиреевские-2', d: 'СЕАО', url: ytIds[4]},
+{n: 'ЦАО-центр-3', d: 'ЦАО', url: ytIds[5]},
+{n: 'НАО-ост', d: 'НАО', url: ytIds[6]},
+{n: 'САО-севеп', d: 'САО', url: ytIds[0]},
+{n: 'ЗАО-зап', d: 'ЗАО', url: ytIds[1]},
+{n: 'СЕАО-юг', d: 'СЕАО', url: ytIds[2]},
 ];
 
-let filteredCameras = cameras;
-const videoPlayer = document.getElementById('videoPlayer');
-const infoPanel = document.getElementById('infoPanel');
-const cameraList = document.getElementById('cameraList');
-const btnLive = document.getElementById('btnLive');
-let currentUrl = '';
-
-function renderCameras() {
-cameraList.innerHTML = '';
-filteredCameras.forEach((cam, i) => {
-const div = document.createElement('div');
-div.className = 'camera-item';
-div.textContent = cam.name;
-div.onclick = () => selectCamera(cam, i);
-cameraList.appendChild(div);
-});
-if(filteredCameras.length > 0) selectCamera(filteredCameras[0], 0);
+function render() {
+  const dist = document.getElementById('dist').value;
+  const list = document.getElementById('cams');
+  list.innerHTML = '';
+  cams.filter(c => !dist || c.d === dist).forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'camera-item';
+    if (!currUrl) currUrl = c.url;
+    el.textContent = c.n;
+    el.onclick = () => {selectCam(c); document.querySelectorAll('.camera-item').forEach(x => x.classList.remove('active')); el.classList.add('active')};
+    list.appendChild(el);
+    if (c.url === currUrl && !el.classList.contains('active')) el.classList.add('active');
+  });
 }
 
-function selectCamera(cam, idx) {
-const videoId = cam.url.split('v=')[1]?.split('&')[0];
-if(!videoId) return;
-const iframeHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>';
-videoPlayer.innerHTML = iframeHTML;
-currentUrl = cam.url;
-btnLive.style.display = 'block';
-infoPanel.innerHTML = '<div class="info-name">🎬 ' + cam.name + '</div><div class="info-district">📍 District: ' + cam.district + '</div><div class="info-district" style="margin-top:8px;color:#22c55e">▶️ YouTube Live</div>';
-document.querySelectorAll('.camera-item').forEach(el => el.classList.remove('active'));
-if(document.querySelectorAll('.camera-item')[idx]) document.querySelectorAll('.camera-item')[idx].classList.add('active');
+function selectCam(c) {
+  currUrl = c.url;
+  const html = '<iframe src="https://www.youtube.com/embed/' + currUrl + '?autoplay=1&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>';
+  document.getElementById('video').innerHTML = html;
+  document.getElementById('info').innerHTML = '<div class="info-row"><span class="info-label">🎬</span> ' + c.n + '</div><div class="info-row"><span class="info-label">📋</span> ' + (lang === 'ru' ? 'Округ: ' : 'District: ') + c.d + '</div><div class="info-row"><span class="info-label">🔊</span> YouTube Live</div>';
 }
 
-function openLive() {
-if(currentUrl) {
-const videoId = currentUrl.split('v=')[1]?.split('&')[0];
-window.open('https://www.youtube.com/watch?v=' + videoId, '_blank');
-}
-}
+function filterCams() { render(); }
+function live() { window.open('https://www.youtube.com/watch?v=' + currUrl, '_blank'); }
+function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+function setLang(l) { lang = l; document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
 
-function filterCameras() {
-const dist = document.getElementById('districtFilter').value;
-filteredCameras = dist ? cameras.filter(c => c.district === dist) : cameras;
-renderCameras();
-}
-
-renderCameras();
+render();
 </script>
 </body>
 </html>
