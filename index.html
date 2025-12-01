@@ -2,42 +2,57 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NEON MOSCOW CAMS - Live</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>NEON MOSCOW CAMS</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overflow:hidden}
-.container{display:flex;height:100vh}
-.sidebar{width:340px;background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);border-right:2px solid #8b5cf6;display:flex;flex-direction:column;box-shadow:inset 0 0 30px rgba(139,92,246,.2)}
-.main{flex:1;display:flex;flex-direction:column}
-.header{background:linear-gradient(90deg,#8b5cf6 0%,#22c55e 100%);color:#000;padding:20px;text-align:center;font-weight:bold;border-bottom:2px solid #22c55e;font-size:20px}
-.filter-box{padding:15px;border-bottom:2px solid #8b5cf6}
-.filter-box select{width:100%;padding:10px;background:#0a0e27;border:2px solid #22c55e;color:#22c55e;border-radius:5px;font-family:'Courier New',monospace;cursor:pointer}
+html,body{width:100%;height:100%;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overflow:hidden;padding-top:max(0px,env(safe-area-inset-top));padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
+.container{display:flex;flex-direction:column;height:100vh;width:100%}
+@media(min-width:1024px){
+.container{flex-direction:row}
+}
+.sidebar{width:100%;max-height:30%;background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);border-bottom:2px solid #8b5cf6;display:flex;flex-direction:column;box-shadow:inset 0 0 30px rgba(139,92,246,.2)}
+@media(min-width:1024px){
+.sidebar{width:340px;max-height:100%;border-right:2px solid #8b5cf6;border-bottom:none}
+}
+.main{flex:1;display:flex;flex-direction:column;min-height:0}
+.header{background:linear-gradient(90deg,#8b5cf6 0%,#22c55e 100%);color:#000;padding:15px;text-align:center;font-weight:bold;border-bottom:2px solid #22c55e;font-size:18px}
+@media(max-width:768px){
+.header{padding:12px;font-size:16px}
+}
+.filter-box{padding:12px;border-bottom:2px solid #8b5cf6}
+.filter-box select{width:100%;padding:10px;background:#0a0e27;border:2px solid #22c55e;color:#22c55e;border-radius:5px;font-family:'Courier New',monospace;cursor:pointer;font-size:14px;-webkit-appearance:none;-moz-appearance:none;appearance:none}
 .camera-list{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:#8b5cf6 #0a0e27}
-.camera-item{padding:12px;margin:8px 0;background:rgba(34,197,94,.1);border:2px solid #8b5cf6;border-radius:5px;cursor:pointer;transition:all .3s;font-size:11px;word-wrap:break-word}
-.camera-item:hover{background:rgba(139,92,246,.3);border-color:#22c55e}
+.camera-item{padding:12px;margin:6px 0;background:rgba(34,197,94,.1);border:2px solid #8b5cf6;border-radius:5px;cursor:pointer;transition:all .2s;font-size:12px;word-wrap:break-word;active:#22c55e}
+.camera-item:active{background:rgba(139,92,246,.5)}
 .camera-item.active{background:rgba(139,92,246,.3);border-color:#22c55e;border-left:4px solid #22c55e}
-.video-container{flex:1;display:flex;flex-direction:column;position:relative}
+.video-container{flex:1;display:flex;flex-direction:column;position:relative;min-height:0}
 .video-player{flex:1;background:#000;border:2px solid #22c55e;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
 .video-player iframe{width:100%;height:100%;border:none}
-.loading{text-align:center;color:#22c55e;padding:20px;font-size:16px}
-.btn-live{position:absolute;bottom:20px;right:20px;padding:12px 24px;background:#22c55e;color:#000;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:14px;font-family:'Courier New',monospace;z-index:100;transition:all .3s}
-.btn-live:hover{background:#8b5cf6;color:#22c55e;transform:scale(1.05)}
-.info-panel{background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);padding:15px;border-top:2px solid #22c55e;min-height:80px;overflow-y:auto;font-size:11px}
-.info-name{color:#22c55e;font-weight:bold;font-size:13px;margin-bottom:5px}
+.loading{text-align:center;color:#22c55e;padding:20px;font-size:14px}
+.btn-live{position:absolute;bottom:15px;right:15px;padding:12px 20px;background:#22c55e;color:#000;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:13px;font-family:'Courier New',monospace;z-index:100;transition:all .2s;-webkit-appearance:none;appearance:none}
+.btn-live:active{background:#8b5cf6;color:#22c55e;transform:scale(0.95)}
+.info-panel{background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);padding:12px;border-top:2px solid #22c55e;min-height:70px;overflow-y:auto;font-size:11px}
+.info-name{color:#22c55e;font-weight:bold;font-size:12px;margin-bottom:5px}
 .info-district{color:#8b5cf6;font-size:10px;margin:5px 0}
+@media(max-width:768px){
+.info-panel{min-height:60px}
+.info-name{font-size:11px}
+}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="sidebar">
-<div class="header">NEON MOSCOW</div>
+<div class="header">🎬 NEON MOSCOW</div>
 <div class="filter-box">
 <select id="districtFilter" onchange="filterCameras()">
 <option value="">All Districts</option>
 <option value="Central">Central</option>
 <option value="North">North</option>
-<option value="South">South</option>
 <option value="East">East</option>
 <option value="West">West</option>
 </select>
@@ -47,23 +62,23 @@ body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overfl
 <div class="main">
 <div class="video-container">
 <div class="video-player" id="videoPlayer"><div class="loading">📺 SELECT CAMERA</div></div>
-<button class="btn-live" id="btnLive" onclick="openLive()" style="display:none">🔴 WATCH LIVE</button>
+<button class="btn-live" id="btnLive" onclick="openLive()" style="display:none">📱 OPEN FULL</button>
 </div>
 <div class="info-panel" id="infoPanel"></div>
 </div>
 </div>
 <script>
 const cameras = [
+{name:'Moscow Moskva River Live',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
 {name:'Moscow Live Stream 1',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Live Stream 2',district:'Central',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
-{name:'Moscow Live Stream 3',district:'East',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
-{name:'Moscow Live Stream 4',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Live Broadcast 1',district:'West',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
-{name:'Moscow Live Broadcast 2',district:'North',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
-{name:'Moscow City Live',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
-{name:'Moscow Center Live',district:'East',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
-{name:'Moscow Stream Live 1',district:'South',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
-{name:'Moscow Stream Live 2',district:'West',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'}
+{name:'Moscow Live Stream 2',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
+{name:'Moscow Live Center View',district:'East',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
+{name:'Moscow Night City',district:'Central',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
+{name:'Moscow Streets Live',district:'North',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
+{name:'Moscow Urban View',district:'West',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'},
+{name:'Moscow Traffic Live',district:'East',url:'https://www.youtube.com/watch?v=9SW43w9wpfo'},
+{name:'Moscow Downtown',district:'Central',url:'https://www.youtube.com/watch?v=eeMEZYE9qE0'},
+{name:'Moscow Live Today',district:'West',url:'https://www.youtube.com/watch?v=6xs1dNWHpgk'}
 ];
 
 let filteredCameras = cameras;
@@ -86,18 +101,22 @@ if(filteredCameras.length > 0) selectCamera(filteredCameras[0], 0);
 }
 
 function selectCamera(cam, idx) {
-const videoId = cam.url.split('v=')[1];
-const iframeHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+const videoId = cam.url.split('v=')[1]?.split('&')[0];
+if(!videoId) return;
+const iframeHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>';
 videoPlayer.innerHTML = iframeHTML;
 currentUrl = cam.url;
 btnLive.style.display = 'block';
-infoPanel.innerHTML = '<div class="info-name">🎬 ' + cam.name + '</div><div class="info-district">District: ' + cam.district + '</div><div class="info-district" style="margin-top:10px;color:#22c55e">📡 YouTube Live</div>';
+infoPanel.innerHTML = '<div class="info-name">🎬 ' + cam.name + '</div><div class="info-district">📍 District: ' + cam.district + '</div><div class="info-district" style="margin-top:8px;color:#22c55e">▶️ YouTube Live</div>';
 document.querySelectorAll('.camera-item').forEach(el => el.classList.remove('active'));
 if(document.querySelectorAll('.camera-item')[idx]) document.querySelectorAll('.camera-item')[idx].classList.add('active');
 }
 
 function openLive() {
-if(currentUrl) window.open(currentUrl, '_blank');
+if(currentUrl) {
+const videoId = currentUrl.split('v=')[1]?.split('&')[0];
+window.open('https://www.youtube.com/watch?v=' + videoId, '_blank');
+}
 }
 
 function filterCameras() {
