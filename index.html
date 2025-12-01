@@ -1,1 +1,119 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON MOSCOW CAMS</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overflow:hidden}.container{display:flex;height:100vh}.sidebar{width:340px;background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);border-right:2px solid #8b5cf6;display:flex;flex-direction:column;box-shadow:inset 0 0 30px rgba(139,92,246,.2)}.main{flex:1;display:flex;flex-direction:column}.header{background:linear-gradient(90deg,#8b5cf6 0%,#22c55e 100%);color:#000;padding:20px;text-align:center;font-weight:bold;border-bottom:2px solid #22c55e;font-size:20px}.filter-box{padding:15px;border-bottom:2px solid #8b5cf6}.filter-box select{width:100%;padding:10px;background:#0a0e27;border:2px solid #22c55e;color:#22c55e;border-radius:5px;font-family:'Courier New',monospace}.camera-list{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:#8b5cf6 #0a0e27}.camera-item{padding:12px;margin:8px 0;background:rgba(34,197,94,.1);border:2px solid #8b5cf6;border-radius:5px;cursor:pointer;transition:all .3s;font-size:11px}.camera-item:hover,.camera-item.active{background:rgba(139,92,246,.3);border-color:#22c55e}.video-container{flex:1;display:flex;flex-direction:column}.video-player{flex:1;background:#000;border:2px solid #22c55e;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}.video-player img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}.btn-live{position:absolute;bottom:20px;right:20px;padding:10px 20px;background:#22c55e;color:#000;border:none;border-radius:5px;cursor:pointer;font-weight:bold;z-index:10;transition:all .3s;font-family:'Courier New',monospace}.btn-live:hover{background:#8b5cf6;color:#22c55e;transform:scale(1.05)}.info-panel{background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);padding:15px;border-top:2px solid #22c55e;min-height:80px;overflow-y:auto;font-size:11px}.info-text{margin:5px 0}.district-label{color:#8b5cf6;font-size:10px;margin-top:5px}</style></head><body><div class="container"><div class="sidebar"><div class="header">NEON MOSCOW</div><div class="filter-box"><select id="districtFilter"><option value="">All Districts</option><option value="Central">Central</option><option value="North">North</option><option value="South">South</option><option value="East">East</option><option value="West">West</option></select></div><div class="camera-list" id="cameraList"></div></div><div class="main"><div class="video-container"><img id="videoPlayer" src="" style="display:none"/><button class="btn-live" onclick="openLive()" style="display:none" id="btnLive">📏 LIVE</button></div><div class="info-panel" id="infoPanel"></div></div></div><script>const cameras=[{name:'Red Square',district:'Central',url:'https://img.insecam.org/live/564020/index.jpg',liveLink:'https://www.geocam.ru/en/online/red-square/'},{name:'Kremlin Palace',district:'Central',url:'https://img.insecam.org/live/754223/index.jpg',liveLink:'https://www.geocam.ru/en/online/kremlin/'},{name:'Serafimovich Street',district:'Central',url:'https://img.insecam.org/live/854257/index.jpg',liveLink:'https://www.geocam.ru/en/online/serafimovich-street/'},{name:'Bolshaya Nikitskaya',district:'Central',url:'https://img.insecam.org/live/215530/index.jpg',liveLink:'https://www.geocam.ru/en/in/moscow/city-views/'},{name:'Sakharov Avenue',district:'East',url:'https://img.insecam.org/live/886215/index.jpg',liveLink:'https://www.geocam.ru/en/in/moscow/city-views/'},{name:'Enthusiasts Highway',district:'East',url:'https://img.insecam.org/live/299121/index.jpg',liveLink:'https://www.geocam.ru/en/in/moscow/traffic/'},{name:'Novinsky Boulevard',district:'West',url:'https://img.insecam.org/live/564020/index.jpg',liveLink:'https://www.geocam.ru/en/in/moscow/city-views/'},{name:'Tverskaya Street',district:'Central',url:'https://img.insecam.org/live/854257/index.jpg',liveLink:'https://www.geocam.ru/en/in/moscow/'},{name:'Pushkin Square',district:'Central',url:'https://img.insecam.org/live/754223/index.jpg',liveLink:'https://www.geocam.ru/en/in/moscow/'},{name:'Theater Square',district:'Central',url:'https://img.insecam.org/live/215530/index.jpg',liveLink:'https://www.geocam.ru/en/in/moscow/'}];let filtered=cameras;const filter=document.getElementById('districtFilter');const list=document.getElementById('cameraList');const videoPlayer=document.getElementById('videoPlayer');const btnLive=document.getElementById('btnLive');const info=document.getElementById('infoPanel');let currentLive='';function show(arr){list.innerHTML='';arr.forEach((cam,i)=>{const div=document.createElement('div');div.className='camera-item';div.textContent=cam.name+'\n'+cam.district;div.onclick=()=>select(cam,i);list.appendChild(div)});}function select(cam,i){videoPlayer.src=cam.url+'?t='+Date.now();videoPlayer.style.display='block';currentLive=cam.liveLink;btnLive.style.display='block';info.innerHTML='<div style="color:#22c55e;font-weight:bold;font-size:13px">'+cam.name+'</div><div class="district-label">District: '+cam.district+'</div><div class="info-text" style="color:#8b5cf6;margin-top:10px;font-size:10px">JPEG Snapshot Updated</div>';document.querySelectorAll('.camera-item').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.camera-item')[i].classList.add('active');}function openLive(){window.open(currentLive,'_blank');}filter.addEventListener('change',(e)=>{const dist=e.target.value;filtered=dist?cameras.filter(c=>c.district===dist):cameras;show(filtered);});show(cameras);if(cameras.length>0)select(cameras[0],0);</script></body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEON MOSCOW CAMS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Courier New',monospace;background:#0a0e27;color:#22c55e;overflow:hidden}
+.container{display:flex;height:100vh}
+.sidebar{width:340px;background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);border-right:2px solid #8b5cf6;display:flex;flex-direction:column;box-shadow:inset 0 0 30px rgba(139,92,246,.2)}
+.main{flex:1;display:flex;flex-direction:column}
+.header{background:linear-gradient(90deg,#8b5cf6 0%,#22c55e 100%);color:#000;padding:20px;text-align:center;font-weight:bold;border-bottom:2px solid #22c55e;font-size:20px}
+.filter-box{padding:15px;border-bottom:2px solid #8b5cf6}
+.filter-box select{width:100%;padding:10px;background:#0a0e27;border:2px solid #22c55e;color:#22c55e;border-radius:5px;font-family:'Courier New',monospace}
+.camera-list{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:#8b5cf6 #0a0e27}
+.camera-item{padding:12px;margin:8px 0;background:rgba(34,197,94,.1);border:2px solid #8b5cf6;border-radius:5px;cursor:pointer;transition:all .3s;font-size:11px}
+.camera-item:hover,.camera-item.active{background:rgba(139,92,246,.3);border-color:#22c55e}
+.video-container{flex:1;display:flex;flex-direction:column}
+.video-player{flex:1;background:#000;border:2px solid #22c55e;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+.video-player iframe,.video-player img,.video-player video{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}
+.btn-live{position:absolute;bottom:20px;right:20px;padding:10px 20px;background:#22c55e;color:#000;border:none;border-radius:5px;cursor:pointer;font-weight:bold;z-index:10;transition:all .3s;font-family:'Courier New',monospace}
+.btn-live:hover{background:#8b5cf6;color:#22c55e;transform:scale(1.05)}
+.info-panel{background:linear-gradient(135deg,#1a1f3a 0%,#0f1629 100%);padding:15px;border-top:2px solid #22c55e;min-height:80px;overflow-y:auto;font-size:11px}
+.info-text{margin:5px 0}
+.district-label{color:#8b5cf6;font-size:10px;margin-top:5px}
+.loading{text-align:center;color:#22c55e;padding:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="sidebar">
+<div class="header">NEON MOSCOW</div>
+<div class="filter-box">
+<select id="districtFilter">
+<option value="">All Districts</option>
+<option value="Central">Central</option>
+<option value="North">North</option>
+<option value="South">South</option>
+<option value="East">East</option>
+<option value="West">West</option>
+</select>
+</div>
+<div class="camera-list" id="cameraList"></div>
+</div>
+<div class="main">
+<div class="video-container">
+<div class="video-player" id="videoPlayer"><div class="loading">SELECT CAMERA</div></div>
+<button class="btn-live" onclick="openLive()" style="display:none" id="btnLive">📺 LIVE PAGE</button>
+</div>
+<div class="info-panel" id="infoPanel"></div>
+</div>
+</div>
+<script>
+const cameras=[
+{name:'Red Square',district:'Central',url:'https://www.earthcam.com/russia/moscow/',type:'iframe'},
+{name:'Moscow City Center',district:'Central',url:'https://cdn.worldcam.net/worldcam-moscow/live.m3u8',type:'video'},
+{name:'Kremlin Wall',district:'Central',url:'https://www.geocam.ru/en/online/kremlin/',type:'link'},
+{name:'Tverskaya Street',district:'Central',url:'https://www.geocam.ru/en/in/moscow/',type:'link'},
+{name:'Pushkin Square',district:'Central',url:'https://www.geocam.ru/en/in/moscow/',type:'link'},
+{name:'Theater Square',district:'Central',url:'https://www.geocam.ru/en/in/moscow/',type:'link'},
+{name:'Sakharov Avenue',district:'East',url:'https://www.geocam.ru/en/in/moscow/city-views/',type:'link'},
+{name:'Enthusiasts Highway',district:'East',url:'https://www.geocam.ru/en/in/moscow/traffic/',type:'link'},
+{name:'Novinsky Boulevard',district:'West',url:'https://www.geocam.ru/en/in/moscow/city-views/',type:'link'},
+{name:'Northern View',district:'North',url:'https://www.geocam.ru/en/in/moscow/',type:'link'}
+];
+let filtered=cameras;
+const filter=document.getElementById('districtFilter');
+const list=document.getElementById('cameraList');
+const videoPlayer=document.getElementById('videoPlayer');
+const btnLive=document.getElementById('btnLive');
+const info=document.getElementById('infoPanel');
+let currentLive='';
+function show(arr){
+list.innerHTML='';
+arr.forEach((cam,i)=>{
+const div=document.createElement('div');
+div.className='camera-item';
+div.textContent=cam.name+'\n'+cam.district;
+div.onclick=()=>select(cam,i);
+list.appendChild(div);
+});
+}
+function select(cam,i){
+videoPlayer.innerHTML='';
+if(cam.type==='iframe'){
+const iframe=document.createElement('iframe');
+iframe.src=cam.url;
+iframe.style.border='none';
+iframe.allow='autoplay';
+videoPlayer.appendChild(iframe);
+}else if(cam.type==='video'){
+const video=document.createElement('video');
+video.src=cam.url;
+video.controls=true;
+video.autoplay=true;
+videoPlayer.appendChild(video);
+}else{
+videoPlayer.innerHTML='<div class="loading">📺 ' Click LIVE PAGE button<br>to open full stream</div>';
+}
+currentLive=cam.url;
+btnLive.style.display='block';
+info.innerHTML='<div style="color:#22c55e;font-weight:bold;font-size:13px">'+cam.name+'</div><div class="district-label">District: '+cam.district+'</div><div class="info-text" style="color:#8b5cf6;margin-top:10px;font-size:10px">📍 Moscow Live Stream</div>';
+document.querySelectorAll('.camera-item').forEach(el=>el.classList.remove('active'));
+document.querySelectorAll('.camera-item')[i].classList.add('active');
+}
+function openLive(){
+window.open(currentLive,'_blank');
+}
+filter.addEventListener('change',(e)=>{
+const dist=e.target.value;
+filtered=dist?cameras.filter(c=>c.district===dist):cameras;
+show(filtered);
+});
+show(cameras);
+if(cameras.length>0)select(cameras[0],0);
+</script>
+</body>
+</html>
