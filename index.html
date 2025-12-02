@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+          <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -75,7 +75,7 @@ const cameras = [
   {r:'Воробьевы горы',en:'Vorobyovy Hills',o:'YUAO',id:7},
   {r:'МГУ',en:'Moscow State University',o:'YUAO',id:8},
   {r:'Лужники',en:'Luzhniki',o:'YUAO',id:9},
-  {r:'Минский проспект',en:'Minskiy Prospect',o:'SZAO',id:10},
+  {r:'Минский проспект',en:'Minskiy Prospect',o:''ZAO'',id:10},
   {r:'Останкинская башня',en:'Ostankino Tower',o:'SAO',id:11},
   {r:'ВДНХ',en:'VDNKh',o:'SAO',id:12},
   {r:'Ботанический сад',en:'Botanical Garden',o:'SAO',id:13},
@@ -90,7 +90,8 @@ const cameras = [
   {r:'Рублевское шоссе',en:'Rublevskoe Hwy',o:'ZAO',id:22},
   {r:'Воротниковский переулок',en:'Vorotnikov Lane',o:'VAO',id:23},
   {r:'Преображенская площадь',en:'Preobrazhen Sq',o:'VAO',id:24},
-  {r:'Комсомольская станция',en:'Komsomolskaya Stn',o:'VAO',id:25}
+  {r:'Комсомольская станция',en:'Komsomolskaya Stn',o:'VAO',id:25, {r:'Строгино',en:'Strogino',o:'SZAO',id:26}, {r:'Митино',en:'Mitino',o:'SZAO',id:27}, {r:'Куркино',en:'Kurkino',o:'SZAO',id:28}, {r:'Хорошево-Мневники',en:'Khoroshevo-Mnevniki',o:'SZAO',id:29}, {r:'Серебряный бор',en:'Silver Forest',o:'SZAO',id:30}, {r:'Мякинино',en:'Myakinino',o:'SZAO',id:31}, {r:'Щукино',en:'Shchukino',o:'SZAO',id:32}, {r:'Аэропорт Внуково',en:'Vnukovo Airport',o:'ZAO',id:33}, {r:'Филевский парк',en:'Filevskiy Park',o:'ZAO',id:34}, {r:'Раменки',en:'Ramenki',o:'ZAO',id:35}]
+ ];
 ];
 
 let lang = 'ru';
@@ -119,7 +120,8 @@ function selectCamera(cam, el) {
   document.querySelectorAll('.camera-item').forEach(e => e.classList.remove('active'));
   el.classList.add('active');
   const area = document.getElementById('video-area');
-  area.innerHTML = `<div class="video-content" style="font-size:13px"><div class="video-play">▶</div><div>${lang === 'ru' ? cam.r : cam.en}</div><div>${cam.o}</div><small style="color:#8b5cf6;font-size:10px">Видео прямой трансляции</small></div>`;
+  area.innerHTML = `<div class="video-content" style="font-size:13px"><div class="video-play">▶</div><div>${lang === 'ru' ? cam.r : cam.en}</div><div>${cam.o}</div><small style="color:#8b5cf6;font-size:10px">Видео прямой трансляции</small></div>`;123
+  
   document.getElementById('camera-info').textContent = `${lang === 'ru' ? cam.r : cam.en} (${cam.o})`;
 }
 
