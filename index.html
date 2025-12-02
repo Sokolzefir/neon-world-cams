@@ -1,1 +1,175 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Moskva Kamer</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#22c55e;font-family:Arial,sans-serif;overflow-x:hidden}#container{display:flex;height:100vh}#sidebar{width:300px;background:rgba(0,0,0,0.9);border-right:2px solid #8b5cf6;overflow-y:auto;padding:10px}#main{flex:1;display:flex;flex-direction:column}#header{background:#000;border-bottom:2px solid #22c55e;padding:15px;text-align:center}.title{color:#8b5cf6;text-shadow:0 0 10px #8b5cf6,0 0 20px #8b5cf6;font-size:24px;margin-bottom:10px}.controls{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}.btn{background:#8b5cf6;border:none;color:#000;padding:8px 12px;cursor:pointer;border-radius:4px;font-weight:bold}.btn:hover{background:#22c55e;box-shadow:0 0 15px #22c55e}.btn.active{background:#22c55e;box-shadow:0 0 15px #22c55e}select{background:#111;color:#22c55e;border:2px solid #8b5cf6;padding:8px;cursor:pointer}.camera-item{background:#111;border:2px solid #8b5cf6;color:#22c55e;padding:10px;margin:5px 0;cursor:pointer;border-radius:4px}.camera-item:hover{background:#1a1a1a;box-shadow:0 0 10px #8b5cf6}.camera-item.active{background:#8b5cf6;color:#000;box-shadow:0 0 15px #8b5cf6}#content{flex:1;display:flex;gap:10px;padding:15px;overflow-y:auto}#video-container{flex:1;display:flex;flex-direction:column}iframe{width:100%;flex:1;border:2px solid #8b5cf6;background:#000}#info{background:#111;border:2px solid #22c55e;padding:10px;color:#22c55e;border-radius:4px}#weather{background:#111;border:2px solid #8b5cf6;padding:10px;color:#8b5cf6;margin-bottom:10px;border-radius:4px}@media(max-width:800px){#container{flex-direction:column}#sidebar{width:100%;height:auto;max-height:150px}#content{flex-direction:column}}</style></head><body><div id="container"><div id="sidebar"><div id="header"><div class="title">MOSKVA KAMER PRO</div><div style="color:#22c55e;font-size:12px">Moscow Live Cameras</div></div><div class="controls"><button class="btn active" onclick="setLang('ru')">RU</button><button class="btn" onclick="setLang('en')">EN</button></div><div id="weather"></div><select onchange="filterCam(this.value)"><option value="">All Districts</option></select><div id="cam-list"></div></div><div id="main"><div id="content"><div id="video-container"><div style="color:#22c55e;font-size:14px;padding:10px">Select a camera from the list</div><iframe id="video-frame" src="" style="display:none"></iframe></div><div id="info" style="display:none">Camera Info</div></div></div></div><script>const cam=[{r:'Marksistskaya',r2:'Marksistskaya',o:'CAO',u:'marksistskaya'},{r:'Moskva-reka',r2:'Moscow River',o:'CAO',u:'moskva-reka'},{r:'Kutuzovskiy',r2:'Kutuzovskiy',o:'ZAO',u:'kutuzovskiy'},{r:'Tverskaya',r2:'Tverskaya',o:'CAO',u:'tverskaya'},{r:'Pushkin',r2:'Pushkin Square',o:'CAO',u:'pushkin'},{r:'Krasnya',r2:'Red Square',o:'CAO',u:'krasnya'},{r:'Arbat',r2:'Arbat',o:'CAO',u:'arbat'},{r:'Sadovoe',r2:'Garden Ring',o:'CAO',u:'sadovoe'},{r:'Prospekt',r2:'Prospekt Mira',o:'CAO',u:'prospekt'},{r:'Leningrad',r2:'Leningrad Station',o:'CAO',u:'leningrad'},{r:'Paveletsk',r2:'Paveletsk Station',o:'YUAO',u:'paveletsk'},{r:'Kazanskiy',r2:'Kazanskiy Station',o:'CAO',u:'kazanskiy'},{r:'Belorusskiy',r2:'Belorusskiy Station',o:'CAO',u:'belorusskiy'},{r:'Yaroslavl',r2:'Yaroslavl Station',o:'CAO',u:'yaroslavl'},{r:'Komsomolskaya',r2:'Komsomolskaya',o:'VAO',u:'komsomolskaya'},{r:'Taganskaya',r2:'Taganskaya',o:'CAO',u:'taganskaya'},{r:'Komsomolets',r2:'Komsomolskaya Street',o:'VAO',u:'komsomolets'},{r:'Vokzalnaya',r2:'Vokzalnaya',o:'CAO',u:'vokzalnaya'},{r:'Revolyutsii',r2:'Revolutsii Square',o:'CAO',u:'revolyutsii'},{r:'Okhotnyy',r2:'Okhotnyy Row',o:'CAO',u:'okhotnyy'},{r:'Mayakovskaya',r2:'Mayakovskaya',o:'CAO',u:'mayakovskaya'},{r:'Belorusskaya',r2:'Belorusskaya',o:'CAO',u:'belorusskaya'},{r:'Dinamo',r2:'Dinamo Stadium',o:'CAO',u:'dinamo'},{r:'Aeroport',r2:'Aeroport',o:'SAO',u:'aeroport'},{r:'Botanicheskiy',r2:'Botanical Garden',o:'SAO',u:'botanicheskiy'},{r:'Vorobyovy',r2:'Vorobyovy Hills',o:'YUAO',u:'vorobyovy'},{r:'Universitet',r2:'Universitet',o:'YUAO',u:'universitet'},{r:'Luzhniki',r2:'Luzhniki',o:'YUAO',u:'luzhniki'},{r:'Dorogomilovskiy',r2:'Dorogomilovskiy Bridge',o:'ZAO',u:'dorogomilovskiy'},{r:'Novoarbatskiy',r2:'Novoarbasskiy Bridge',o:'CAO',u:'novoarbatskiy'},{r:'Krasnopresnenskiy',r2:'Krasnopresenskiy',o:'CAO',u:'krasnopresnenskiy'},{r:'Berezniki',r2:'Berezniki',o:'SZAO',u:'berezniki'},{r:'Lefortovo',r2:'Lefortovo',o:'VAO',u:'lefortovo'},{r:'Sokolniki',r2:'Sokolniki',o:'VAO',u:'sokolniki'},{r:'Izmaylovo',r2:'Izmaylovo',o:'VAO',u:'izmaylovo'},{r:'Losiny',r2:'Losiny Ostrov',o:'VAO',u:'losiny'},{r:'Krasnoselskaya',r2:'Krasnoselskaya',o:'CAO',u:'krasnoselskaya'},{r:'Yaroslavskiy',r2:'Yaroslavskiy',o:'CAO',u:'yaroslavskiy'},{r:'Komsomolskaya2',r2:'Komsomolskaya-2',o:'VAO',u:'komsomolskaya2'},{r:'Krasnaya',r2:'Krasnaya Presnya',o:'CAO',u:'krasnaya'},{r:'Prospekt2',r2:'Prospekt Mira 2',o:'CAO',u:'prospekt2'}];let lng='ru';const txt={ru:'Camera List',en:'Camera List'};function setLang(l){lng=l;document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');loadCameras()}function loadCameras(){const lst=document.getElementById('cam-list');lst.innerHTML='';const d=lng==='ru'?'r':'r2';cam.forEach((c,i)=>{const el=document.createElement('div');el.className='camera-item';el.textContent=c[d];el.onclick=()=>loadCamera(i);lst.appendChild(el)})}function filterCam(o){const lst=document.getElementById('cam-list');lst.innerHTML='';const d=lng==='ru'?'r':'r2';cam.filter(c=>o===''||c.o===o).forEach((c,i)=>{const el=document.createElement('div');el.className='camera-item';el.textContent=c[d];el.onclick=()=>loadCamera(cam.indexOf(c));lst.appendChild(el)})}function loadCamera(i){const c=cam[i];const vf=document.getElementById('video-frame');const inf=document.getElementById('info');vf.style.display='block';vf.src=`https://www.youtube.com/embed/${c.u}`;inf.style.display='block';inf.textContent=`${c.r} (${c.o})`}function loadWeather(){fetch('https://api.open-meteo.com/v1/forecast?latitude=55.7558&longitude=37.6173&current=temperature_2m,weather_code').then(r=>r.json()).then(d=>{const w=document.getElementById('weather');w.textContent=`Temp: ${d.current.temperature_2m}°C`}).catch(e=>{console.log('Weather error:',e)})}function initDistricts(){const sel=document.querySelector('select');sel.innerHTML='<option value="">All Districts</option>';const dists=new Set(cam.map(c=>c.o)).sort();dists.forEach(d=>{const opt=document.createElement('option');opt.value=d;opt.textContent=d;sel.appendChild(opt)})}window.addEventListener('load',()=>{initDistricts();loadCameras();loadWeather()})</script></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moskva Kamer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; color: #22c55e; font-family: Arial, sans-serif; }
+    #container { display: flex; height: 100vh; }
+    #sidebar { width: 300px; background: rgba(0,0,0,0.9); border-right: 2px solid #8b5cf6; overflow-y: auto; padding: 10px; }
+    #main { flex: 1; display: flex; flex-direction: column; }
+    #header { padding: 15px; text-align: center; border-bottom: 2px solid #22c55e; }
+    .title { color: #8b5cf6; text-shadow: 0 0 10px #8b5cf6; font-size: 24px; margin-bottom: 10px; }
+    .controls { display: flex; gap: 10px; margin: 10px 0; }
+    .btn { background: #8b5cf6; border: none; color: #000; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+    .btn.active { background: #22c55e; }
+    select { background: #111; color: #22c55e; border: 2px solid #8b5cf6; padding: 8px; cursor: pointer; }
+    .camera-item { background: #111; border: 2px solid #8b5cf6; color: #22c55e; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 4px; }
+    .camera-item:hover { background: #1a1a1a; }
+    #content { flex: 1; display: flex; gap: 10px; padding: 15px; }
+    #video-container { flex: 1; display: flex; flex-direction: column; }
+    iframe { width: 100%; flex: 1; border: 2px solid #8b5cf6; background: #000; }
+    #info { background: #111; border: 2px solid #22c55e; padding: 10px; color: #22c55e; margin-top: 10px; }
+    #weather { background: #111; border: 2px solid #8b5cf6; padding: 10px; color: #8b5cf6; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+<div id="container">
+  <div id="sidebar">
+    <div id="header">
+      <div class="title">MOSKVA KAMER PRO</div>
+      <div style="color: #22c55e; font-size: 12px;">Moscow Live Cameras</div>
+    </div>
+    <div class="controls">
+      <button class="btn active" onclick="setLang('ru')">RU</button>
+      <button class="btn" onclick="setLang('en')">EN</button>
+    </div>
+    <div id="weather"></div>
+    <select onchange="filterCam(this.value)">
+      <option value="">All Districts</option>
+    </select>
+    <div id="cam-list"></div>
+  </div>
+  <div id="main">
+    <div id="content">
+      <div id="video-container">
+        <div style="color: #22c55e; font-size: 14px; padding: 10px;">Select a camera from the list</div>
+        <iframe id="video-frame" src="" style="display: none;"></iframe>
+      </div>
+      <div id="info" style="display: none;">Camera Info</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cam = [
+  {r:'Marksistskaya', r2:'Marksistskaya', o:'CAO', u:'marksistskaya'},
+  {r:'Moskva-reka', r2:'Moscow River', o:'CAO', u:'moskva-reka'},
+  {r:'Kutuzovskiy', r2:'Kutuzovskiy', o:'ZAO', u:'kutuzovskiy'},
+  {r:'Tverskaya', r2:'Tverskaya', o:'CAO', u:'tverskaya'},
+  {r:'Pushkin', r2:'Pushkin Square', o:'CAO', u:'pushkin'},
+  {r:'Krasnya', r2:'Red Square', o:'CAO', u:'krasnya'},
+  {r:'Arbat', r2:'Arbat', o:'CAO', u:'arbat'},
+  {r:'Sadovoe', r2:'Garden Ring', o:'CAO', u:'sadovoe'},
+  {r:'Prospekt', r2:'Prospekt Mira', o:'CAO', u:'prospekt'},
+  {r:'Leningrad', r2:'Leningrad Station', o:'CAO', u:'leningrad'},
+  {r:'Paveletsk', r2:'Paveletsk Station', o:'YUAO', u:'paveletsk'},
+  {r:'Kazanskiy', r2:'Kazanskiy Station', o:'CAO', u:'kazanskiy'},
+  {r:'Belorusskiy', r2:'Belorusskiy Station', o:'CAO', u:'belorusskiy'},
+  {r:'Yaroslavl', r2:'Yaroslavl Station', o:'CAO', u:'yaroslavl'},
+  {r:'Komsomolskaya', r2:'Komsomolskaya', o:'VAO', u:'komsomolskaya'},
+  {r:'Taganskaya', r2:'Taganskaya', o:'CAO', u:'taganskaya'},
+  {r:'Komsomolets', r2:'Komsomolskaya Street', o:'VAO', u:'komsomolets'},
+  {r:'Vokzalnaya', r2:'Vokzalnaya', o:'CAO', u:'vokzalnaya'},
+  {r:'Revolyutsii', r2:'Revolutsii Square', o:'CAO', u:'revolyutsii'},
+  {r:'Okhotnyy', r2:'Okhotnyy Row', o:'CAO', u:'okhotnyy'},
+  {r:'Mayakovskaya', r2:'Mayakovskaya', o:'CAO', u:'mayakovskaya'},
+  {r:'Belorusskaya', r2:'Belorusskaya', o:'CAO', u:'belorusskaya'},
+  {r:'Dinamo', r2:'Dinamo Stadium', o:'CAO', u:'dinamo'},
+  {r:'Aeroport', r2:'Aeroport', o:'SAO', u:'aeroport'},
+  {r:'Botanicheskiy', r2:'Botanical Garden', o:'SAO', u:'botanicheskiy'},
+  {r:'Vorobyovy', r2:'Vorobyovy Hills', o:'YUAO', u:'vorobyovy'},
+  {r:'Universitet', r2:'Universitet', o:'YUAO', u:'universitet'},
+  {r:'Luzhniki', r2:'Luzhniki', o:'YUAO', u:'luzhniki'},
+  {r:'Dorogomilovskiy', r2:'Dorogomilovskiy Bridge', o:'ZAO', u:'dorogomilovskiy'},
+  {r:'Novoarbatskiy', r2:'Novoarbasskiy Bridge', o:'CAO', u:'novoarbatskiy'},
+  {r:'Krasnopresnenskiy', r2:'Krasnopresenskiy', o:'CAO', u:'krasnopresnenskiy'},
+  {r:'Berezniki', r2:'Berezniki', o:'SZAO', u:'berezniki'},
+  {r:'Lefortovo', r2:'Lefortovo', o:'VAO', u:'lefortovo'},
+  {r:'Sokolniki', r2:'Sokolniki', o:'VAO', u:'sokolniki'},
+  {r:'Izmaylovo', r2:'Izmaylovo', o:'VAO', u:'izmaylovo'},
+  {r:'Losiny', r2:'Losiny Ostrov', o:'VAO', u:'losiny'},
+  {r:'Krasnoselskaya', r2:'Krasnoselskaya', o:'CAO', u:'krasnoselskaya'},
+  {r:'Yaroslavskiy', r2:'Yaroslavskiy', o:'CAO', u:'yaroslavskiy'},
+  {r:'Komsomolskaya2', r2:'Komsomolskaya-2', o:'VAO', u:'komsomolskaya2'},
+  {r:'Krasnaya', r2:'Krasnaya Presnya', o:'CAO', u:'krasnaya'},
+  {r:'Prospekt2', r2:'Prospekt Mira 2', o:'CAO', u:'prospekt2'}
+];
+
+let lng = 'ru';
+
+function setLang(l) {
+  lng = l;
+  document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  loadCameras();
+}
+
+function loadCameras() {
+  const lst = document.getElementById('cam-list');
+  lst.innerHTML = '';
+  const d = lng === 'ru' ? 'r' : 'r2';
+  cam.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'camera-item';
+    el.textContent = c[d];
+    el.onclick = () => loadCamera(i);
+    lst.appendChild(el);
+  });
+}
+
+function filterCam(o) {
+  const lst = document.getElementById('cam-list');
+  lst.innerHTML = '';
+  const d = lng === 'ru' ? 'r' : 'r2';
+  cam.filter(c => o === '' || c.o === o).forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'camera-item';
+    el.textContent = c[d];
+    el.onclick = () => loadCamera(cam.indexOf(c));
+    lst.appendChild(el);
+  });
+}
+
+function loadCamera(i) {
+  const c = cam[i];
+  const vf = document.getElementById('video-frame');
+  const inf = document.getElementById('info');
+  vf.style.display = 'block';
+  vf.src = `https://www.youtube.com/embed/${c.u}`;
+  inf.style.display = 'block';
+  inf.textContent = `${c.r} (${c.o})`;
+}
+
+function loadWeather() {
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=55.7558&longitude=37.6173&current=temperature_2m,weather_code')
+    .then(r => r.json())
+    .then(d => {
+      const w = document.getElementById('weather');
+      w.textContent = `Temp: ${d.current.temperature_2m}°C`;
+    })
+    .catch(e => console.log('Weather error:', e));
+}
+
+function initDistricts() {
+  const sel = document.querySelector('select');
+  sel.innerHTML = '<option value="">All Districts</option>';
+  const dists = new Set(cam.map(c => c.o));
+  Array.from(dists).sort().forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    sel.appendChild(opt);
+  });
+}
+
+window.addEventListener('load', () => {
+  initDistricts();
+  loadCameras();
+  loadWeather();
+});
+</script>
+</body>
+</html>
