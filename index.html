@@ -5,225 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Москва Камеры PRO</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #000;
-      color: #22c55e;
-      font-family: 'Arial', sans-serif;
-      font-size: 14px;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: row;
-      height: 100vh;
-      gap: 0;
-    }
-
-    .sidebar {
-      width: 300px;
-      background: rgba(0, 0, 0, 0.95);
-      border-right: 2px solid #8b5cf6;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .header {
-      padding: 15px;
-      text-align: center;
-      border-bottom: 2px solid #22c55e;
-    }
-
-    .title {
-      color: #8b5cf6;
-      font-size: 18px;
-      font-weight: bold;
-      text-shadow: 0 0 10px #8b5cf6;
-      margin-bottom: 5px;
-    }
-
-    .subtitle {
-      color: #22c55e;
-      font-size: 11px;
-    }
-
-    .controls {
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      background: #8b5cf6;
-      border: none;
-      color: #000;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-weight: bold;
-      font-size: 12px;
-      transition: all 0.3s;
-    }
-
-    .btn:hover {
-      background: #22c55e;
-      box-shadow: 0 0 15px #22c55e;
-    }
-
-    .btn.active {
-      background: #22c55e;
-      box-shadow: 0 0 15px #22c55e;
-    }
-
-    .weather {
-      background: #111;
-      border: 2px solid #8b5cf6;
-      padding: 10px;
-      margin: 0 10px;
-      color: #8b5cf6;
-      border-radius: 4px;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    select {
-      background: #111;
-      color: #22c55e;
-      border: 2px solid #8b5cf6;
-      padding: 8px;
-      margin: 0 10px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 12px;
-    }
-
-    .camera-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
-
-    .camera-item {
-      background: #111;
-      border: 2px solid #8b5cf6;
-      color: #22c55e;
-      padding: 10px;
-      margin: 5px 0;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 12px;
-      transition: all 0.3s;
-    }
-
-    .camera-item:hover {
-      background: #1a1a1a;
-      box-shadow: 0 0 10px #8b5cf6;
-    }
-
-    .camera-item.active {
-      background: #8b5cf6;
-      color: #000;
-      box-shadow: 0 0 15px #8b5cf6;
-    }
-
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .video-area {
-      flex: 1;
-      background: #000;
-      border-bottom: 2px solid #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .video-placeholder {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #22c55e;
-      font-size: 14px;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .camera-info {
-      background: #111;
-      border-top: 2px solid #22c55e;
-      padding: 15px;
-      color: #22c55e;
-      font-size: 14px;
-      border-left: 4px solid #8b5cf6;
-    }
-
-    /* Мобильная версика */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; color: #22c55e; font-family: Arial, sans-serif; }
+    .container { display: flex; flex-direction: row; height: 100vh; }
+    .sidebar { width: 280px; background: rgba(0,0,0,0.95); border-right: 2px solid #8b5cf6; display: flex; flex-direction: column; }
+    .header { padding: 12px; text-align: center; border-bottom: 2px solid #22c55e; }
+    .title { color: #8b5cf6; font-size: 16px; font-weight: bold; text-shadow: 0 0 10px #8b5cf6; }
+    .subtitle { color: #22c55e; font-size: 10px; margin-top: 3px; }
+    .controls { display: flex; gap: 8px; padding: 8px; }
+    .btn { background: #8b5cf6; border: none; color: #000; padding: 6px 10px; cursor: pointer; border-radius: 3px; font-weight: bold; font-size: 11px; }
+    .btn.active { background: #22c55e; }
+    .weather { background: #111; border: 2px solid #8b5cf6; padding: 8px; margin: 8px; color: #8b5cf6; text-align: center; font-size: 11px; border-radius: 3px; }
+    select { background: #111; color: #22c55e; border: 2px solid #8b5cf6; padding: 6px; margin: 0 8px 8px; cursor: pointer; font-size: 11px; width: calc(100% - 16px); }
+    .camera-list { flex: 1; overflow-y: auto; padding: 8px; }
+    .camera-item { background: #111; border: 2px solid #8b5cf6; color: #22c55e; padding: 8px; margin: 4px 0; cursor: pointer; border-radius: 3px; font-size: 11px; }
+    .camera-item:hover { background: #1a1a1a; }
+    .camera-item.active { background: #8b5cf6; color: #000; }
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .video-area { flex: 1; background: #000; border-bottom: 2px solid #22c55e; display: flex; align-items: center; justify-content: center; }
+    .video-content { text-align: center; color: #22c55e; }
+    .video-play { font-size: 48px; margin-bottom: 10px; }
+    .camera-info { background: #111; border-top: 2px solid #22c55e; padding: 12px; color: #22c55e; font-size: 12px; }
     @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        height: auto;
-        min-height: 100vh;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 40vh;
-        border-right: none;
-        border-bottom: 2px solid #8b5cf6;
-      }
-
-      .camera-list {
-        max-height: 25vh;
-      }
-
-      .main {
-        flex: 1;
-        min-height: 60vh;
-      }
-
-      .title {
-        font-size: 16px;
-      }
-
-      .btn {
-        padding: 6px 10px;
-        font-size: 11px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .camera-list {
-        max-height: 20vh;
-      }
-
-      .main {
-        min-height: 55vh;
-      }
-
-      .title {
-        font-size: 14px;
-      }
-
-      .sidebar {
-        max-height: 45vh;
-      }
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; max-height: 35vh; border-right: none; border-bottom: 2px solid #8b5cf6; }
+      .camera-list { max-height: 20vh; }
+      .main { min-height: 65vh; }
     }
   </style>
 </head>
@@ -233,31 +40,24 @@
   <div class="sidebar">
     <div class="header">
       <div class="title">MOSKVA KAMER PRO</div>
-      <div class="subtitle">Москва Камеры в реальном времени</div>
+      <div class="subtitle">Москва в реальном времени</div>
     </div>
-
     <div class="controls">
       <button class="btn active" onclick="setLang('ru')">РУ</button>
       <button class="btn" onclick="setLang('en')">EN</button>
     </div>
-
-    <div class="weather" id="weather">Загрузка...</div>
-
+    <div class="weather" id="weather">Темп: загрузка...</div>
     <select onchange="filterCam(this.value)" id="district-select">
       <option value="">Все округа</option>
     </select>
-
     <div class="camera-list" id="camera-list"></div>
   </div>
 
   <div class="main">
-    <div class="video-area">
-      <div class="video-placeholder" id="video-placeholder">
-        <div>
-          🎥<br>
-          Выберите камеру<br>
-          из списка
-        </div>
+    <div class="video-area" id="video-area">
+      <div class="video-content">
+        <div class="video-play">🎥</div>
+        <div>Выберите камеру из списка</div>
       </div>
     </div>
     <div class="camera-info" id="camera-info">Информация о камере</div>
@@ -266,30 +66,34 @@
 
 <script>
 const cameras = [
-  {r: 'Красная площадь', en: 'Red Square', o: 'CAO', id: 1},
-  {r: 'Кремль', en: 'Kremlin', o: 'CAO', id: 2},
-  {r: 'Москва-река', en: 'Moscow River', o: 'CAO', id: 3},
-  {r: 'Твerskaya', en: 'Tverskaya', o: 'CAO', id: 4},
-  {r: 'Арбат', en: 'Arbat', o: 'CAO', id: 5},
-  {r: 'Садовое кольцо', en: 'Garden Ring', o: 'CAO', id: 6},
-  {r: 'Лубянка', en: 'Lubyanka', o: 'CAO', id: 7},
-  {r: 'Метро Маяковская', en: 'Mayakovskaya Metro', o: 'CAO', id: 8},
-  {r: 'Парк Горького', en: 'Gorky Park', o: 'YUAO', id: 9},
-  {r: 'Воробьевы горы', en: 'Vorobyovy Gory', o: 'YUAO', id: 10},
-  {r: 'Лужники', en: 'Luzhniki', o: 'YUAO', id: 11},
-  {r: 'МГУ', en: 'Moscow State University', o: 'YUAO', id: 12},
-  {r: 'Коммунаркa', en: 'Kommunarka', o: 'YUAO', id: 13},
-  {r: 'Битцевский парк', en: 'Bitsevsky Park', o: 'YUAO', id: 14},
-  {r: 'Останкинская башня', en: 'Ostankino Tower', o: 'SAO', id: 15},
-  {r: 'ВДНХ', en: 'VDNKh', o: 'SAO', id: 16},
-  {r: 'Ботанический сад', en: 'Botanical Garden', o: 'SAO', id: 17},
-  {r: 'Аэропорт Шереметьево', en: 'Sheremetevo Airport', o: 'SAO', id: 18},
-  {r: 'Комсомольская', en: 'Komsomolskaya', o: 'VAO', id: 19},
-  {r: 'Красносельская', en: 'Krasnoselskaya', o: 'VAO', id: 20}
+  {r:'Красная площадь',en:'Red Square',o:'CAO',id:1},
+  {r:'Кремль',en:'Kremlin',o:'CAO',id:2},
+  {r:'Москва-река',en:'Moscow River',o:'CAO',id:3},
+  {r:'Большой театр',en:'Bolshoi Theatre',o:'CAO',id:4},
+  {r:'Третьяковская галерея',en:'Tretyakov Gallery',o:'CAO',id:5},
+  {r:'Парк Горького',en:'Gorky Park',o:'YUAO',id:6},
+  {r:'Воробьевы горы',en:'Vorobyovy Hills',o:'YUAO',id:7},
+  {r:'МГУ',en:'Moscow State University',o:'YUAO',id:8},
+  {r:'Лужники',en:'Luzhniki',o:'YUAO',id:9},
+  {r:'Минский проспект',en:'Minskiy Prospect',o:'SZAO',id:10},
+  {r:'Останкинская башня',en:'Ostankino Tower',o:'SAO',id:11},
+  {r:'ВДНХ',en:'VDNKh',o:'SAO',id:12},
+  {r:'Ботанический сад',en:'Botanical Garden',o:'SAO',id:13},
+  {r:'Аэропорт Шереметьево',en:'Sheremetevo Airport',o:'SAO',id:14},
+  {r:'Комсомольская площадь',en:'Komsomolskaya Sq',o:'VAO',id:15},
+  {r:'Красная Пресня',en:'Krasnaya Presnya',o:'CAO',id:16},
+  {r:'Театр на Таганке',en:'Taganka Theatre',o:'CAO',id:17},
+  {r:'Беговая улица',en:'Begovaya St',o:'CAO',id:18},
+  {r:'Тверская улица',en:'Tverskaya St',o:'CAO',id:19},
+  {r:'Петровка',en:'Petrovka',o:'CAO',id:20},
+  {r:'Кутузовский проспект',en:'Kutuzovskiy Av',o:'ZAO',id:21},
+  {r:'Рублевское шоссе',en:'Rublevskoe Hwy',o:'ZAO',id:22},
+  {r:'Воротниковский переулок',en:'Vorotnikov Lane',o:'VAO',id:23},
+  {r:'Преображенская площадь',en:'Preobrazhen Sq',o:'VAO',id:24},
+  {r:'Комсомольская станция',en:'Komsomolskaya Stn',o:'VAO',id:25}
 ];
 
 let lang = 'ru';
-let currentCamera = null;
 
 function setLang(l) {
   lang = l;
@@ -300,32 +104,26 @@ function setLang(l) {
 
 function loadCameras() {
   const list = document.getElementById('camera-list');
-  const districtValue = document.getElementById('district-select').value;
+  const filter = document.getElementById('district-select').value;
   list.innerHTML = '';
-  
-  cameras
-    .filter(c => !districtValue || c.o === districtValue)
-    .forEach((c, idx) => {
-      const el = document.createElement('div');
-      el.className = 'camera-item';
-      el.textContent = lang === 'ru' ? c.r : c.en;
-      el.onclick = () => selectCamera(c, el);
-      list.appendChild(el);
-    });
+  cameras.filter(c => !filter || c.o === filter).forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'camera-item';
+    el.textContent = lang === 'ru' ? c.r : c.en;
+    el.onclick = () => selectCamera(c, el);
+    list.appendChild(el);
+  });
 }
 
 function selectCamera(cam, el) {
-  currentCamera = cam;
   document.querySelectorAll('.camera-item').forEach(e => e.classList.remove('active'));
   el.classList.add('active');
-  
-  const placeholder = document.getElementById('video-placeholder');
-  placeholder.innerHTML = `<div>📹 Камера: ${lang === 'ru' ? cam.r : cam.en}<br>Округ: ${cam.o}<br><small>Видео загружается...</small></div>`;
-  
+  const area = document.getElementById('video-area');
+  area.innerHTML = `<div class="video-content" style="font-size:13px"><div class="video-play">▶</div><div>${lang === 'ru' ? cam.r : cam.en}</div><div>${cam.o}</div><small style="color:#8b5cf6;font-size:10px">Видео прямой трансляции</small></div>`;
   document.getElementById('camera-info').textContent = `${lang === 'ru' ? cam.r : cam.en} (${cam.o})`;
 }
 
-function filterCam(o) {
+function filterCam(val) {
   loadCameras();
 }
 
@@ -333,22 +131,19 @@ function loadWeather() {
   fetch('https://api.open-meteo.com/v1/forecast?latitude=55.7558&longitude=37.6173&current=temperature_2m')
     .then(r => r.json())
     .then(d => {
-      const temp = d.current.temperature_2m;
-      document.getElementById('weather').textContent = `Темп: ${temp}°C`;
+      document.getElementById('weather').textContent = `Темп: ${Math.round(d.current.temperature_2m)}°C`;
     })
-    .catch(() => {
-      document.getElementById('weather').textContent = 'Темп: -';
-    });
+    .catch(() => document.getElementById('weather').textContent = 'Темп: --');
 }
 
 function initDistricts() {
-  const select = document.getElementById('district-select');
-  const districts = [...new Set(cameras.map(c => c.o))].sort();
-  districts.forEach(d => {
+  const sel = document.getElementById('district-select');
+  const dists = [...new Set(cameras.map(c => c.o))].sort();
+  dists.forEach(d => {
     const opt = document.createElement('option');
     opt.value = d;
     opt.textContent = d;
-    select.appendChild(opt);
+    sel.appendChild(opt);
   });
 }
 
